@@ -16,7 +16,7 @@ export default function EnquiryList({ data,getAllEnquiry,Swal,setFormData }) {
   confirmButtonText: "Yes, delete it!"
 }).then((result) => {
   if (result.isConfirmed) {
-    axios.delete(`http://localhost:8020/api/website/enquiry/delete/${delid}`)
+    axios.delete(`https://mern-crud-server-a19z.onrender.com/api/website/enquiry/delete/${delid}`)
     .then((res)=>{
       toast.success("Enquiry Deleted Successfully")
       getAllEnquiry()
@@ -32,7 +32,7 @@ export default function EnquiryList({ data,getAllEnquiry,Swal,setFormData }) {
 
   }
  let editRow=(edid)=>{
-  axios.get(`http://localhost:8020/api/website/enquiry/singleRow/${edid}`)
+  axios.get(`https://mern-crud-server-a19z.onrender.com/api/website/enquiry/singleRow/${edid}`)
   .then((res)=>{
     let data=res.data
     setFormData(data.enquiry)
@@ -42,71 +42,78 @@ export default function EnquiryList({ data,getAllEnquiry,Swal,setFormData }) {
 
 
   return (
-    <div>
-      
-      <div className='bg-gray-200 py-4'>
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+  <h2 className="mb-6 text-center text-xl font-bold text-slate-800 sm:text-2xl">
+    Enquiry List
+  </h2>
 
-        <h2 className='text-[20px] text-center py-4 font-bold'>Enquiry List</h2>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableHeadCell>S.No</TableHeadCell>
-                <TableHeadCell>NAME</TableHeadCell>
-                <TableHeadCell>EMAIL</TableHeadCell>
-                <TableHeadCell>PHONE NO</TableHeadCell>
-                <TableHeadCell>MESSAGE</TableHeadCell>
-                <TableHeadCell>
-                  Delete
-                </TableHeadCell>
-                <TableHeadCell>
-                  Edit
-                </TableHeadCell>
+  <div className="overflow-x-auto rounded-xl border border-slate-200">
+    <Table hoverable className="min-w-[900px] text-sm text-slate-700">
+      <TableHead className="bg-slate-100 text-xs uppercase tracking-wide text-slate-700">
+        <TableRow>
+          <TableHeadCell className="whitespace-nowrap">S.No</TableHeadCell>
+          <TableHeadCell className="whitespace-nowrap">NAME</TableHeadCell>
+          <TableHeadCell className="whitespace-nowrap">EMAIL</TableHeadCell>
+          <TableHeadCell className="whitespace-nowrap">PHONE NO</TableHeadCell>
+          <TableHeadCell className="whitespace-nowrap">MESSAGE</TableHeadCell>
+          <TableHeadCell className="whitespace-nowrap text-center">Delete</TableHeadCell>
+          <TableHeadCell className="whitespace-nowrap text-center">Edit</TableHeadCell>
+        </TableRow>
+      </TableHead>
+
+      <TableBody className="divide-y">
+        {data.length >= 1 ? (
+          data.map((item, index) => {
+            return (
+              <TableRow
+                key={index}
+                className="bg-white transition hover:bg-slate-50"
+              >
+                <TableCell className="font-medium text-slate-800">
+                  {index + 1}
+                </TableCell>
+                <TableCell className="whitespace-nowrap font-medium text-slate-800">
+                  {item.name}
+                </TableCell>
+                <TableCell className="whitespace-nowrap">{item.email}</TableCell>
+                <TableCell className="whitespace-nowrap">{item.phone}</TableCell>
+                <TableCell className="min-w-[220px] max-w-[320px] whitespace-normal break-words text-slate-600">
+                  {item.message}
+                </TableCell>
+                <TableCell className="text-center">
+                  <button
+                    onClick={() => {
+                      deleteRow(item._id);
+                    }}
+                    className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-200"
+                  >
+                    Delete
+                  </button>
+                </TableCell>
+                <TableCell className="text-center">
+                  <button
+                    onClick={() => {
+                      editRow(item._id);
+                    }}
+                    className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-200"
+                  >
+                    Edit
+                  </button>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody className="divide-y">
-              {
-                data.length >= 1 ?
-                     data.map((item, index) => {
-                          return (
-                            
-
-
-
-                              <tr key={index} className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                              <TableCell>{index + 1}</TableCell>
-                              <TableCell>{item.name}</TableCell>
-                              <TableCell>{item.email}</TableCell>
-                              <TableCell>{item.phone}</TableCell>
-                              <TableCell>{item.message}</TableCell>
-                              <TableCell>
-                                <button onClick={()=>{deleteRow(item._id)}} className='bg-red-500 cursor-pointer text-white rounded-md py-1 px-4'>Delete</button>
-                              </TableCell>
-                              <TableCell>
-                                <button onClick={()=>{editRow(item._id)}} className='bg-blue-500 text-white rounded-md py-1 px-4 cursor-pointer'>Edit</button>
-                              </TableCell>
-                            </tr>
-                          )
-
-                        
-                          })
-                          :
-
-                            <TableRow className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                            <TableCell colSpan={7} className='text-center'>No Data Found</TableCell>
-                            </TableRow>
-                    }
-
-
-
-
-            </TableBody>
-          </Table>
-        </div>
-
-      </div>
-
-    </div>
+            );
+          })
+        ) : (
+          <TableRow className="bg-white">
+            <TableCell colSpan={7} className="py-6 text-center text-slate-500">
+              No Data Found
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  </div>
+</div>
   )
 }
 
